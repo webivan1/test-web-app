@@ -1,0 +1,55 @@
+version: '3.2'
+
+services:
+  php-fpm:
+    build: ./docker/php-fpm
+    volumes:
+      - ./backend:/app
+    networks:
+      - test-network
+
+  php-cli:
+    build: ./docker/php-cli
+    volumes:
+      - ./backend:/app
+      - composer:/root/.composer/cache
+    networks:
+      - test-network
+
+  test-mysql:
+    image: mysql:8.0.21
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports:
+      - "33061:3306"
+    environment:
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: test
+    volumes:
+      - mysql:/var/lib/mysql
+    networks:
+      - test-network
+
+  nginx-backend:
+    build: ./docker/nginx
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8080:80"
+    depends_on:
+      - php-cli
+      - php-fpm
+      - test-mysql
+    networks:
+      - test-network
+
+networks:
+  test-network:
+    driver: bridge
+
+volumes:
+  composer:
+  mysql:
+

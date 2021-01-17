@@ -1,0 +1,16 @@
+.login-container {
+    padding: 15px;
+    display: flex;
+    min-height: 100vh;
+    justify-content: center;
+    align-content: center;
+    background: #f7f7f7;
+
+    .card {
+        min-width: 320px;
+
+        @include media-breakpoint-down('sm') {
+            min-width: auto;
+        }
+    }
+}
