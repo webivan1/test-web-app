@@ -7,6 +7,7 @@ use App\Http\Requests\ClientFilterRequest;
 use App\Http\Requests\ClientRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
 class ClientController extends Controller
@@ -28,7 +29,7 @@ class ClientController extends Controller
 
     public function store(ClientRequest $request): RedirectResponse
     {
-        $avatar = Client::saveAvatar($request->file('avatar'));
+        $avatar = $this->saveFile($request->file('avatar'));
 
         $client = new Client(
             array_merge($request->only('first_name', 'last_name', 'email'), compact('avatar'))
@@ -53,7 +54,7 @@ class ClientController extends Controller
 
     public function update(ClientRequest $request, Client $client): RedirectResponse
     {
-        $avatar = Client::saveAvatar($request->file('avatar'));
+        $avatar = $this->saveFile($request->file('avatar'));
 
         $attrs = array_filter(
             array_merge($request->only('first_name', 'last_name', 'email'), compact('avatar'))
@@ -76,5 +77,10 @@ class ClientController extends Controller
 
         return redirect()->route('client.index')
             ->with('success', 'You have successfully deleted the client');
+    }
+
+    protected function saveFile(?UploadedFile $file): ?string
+    {
+        return $file ? $file->store('public/images') : null;
     }
 }

@@ -77,9 +77,4 @@ class Client extends Model
     {
         return $this->avatar ? Storage::url($this->avatar) : null;
     }
-
-    public static function saveAvatar(?UploadedFile $file): ?string
-    {
-        return $file ? $file->store('public/images') : null;
-    }
 }
