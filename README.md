@@ -1,4 +1,5 @@
-#Test basic web application 
+Test basic web application 
+---
 
 ###Install
 
@@ -19,15 +20,11 @@ DB_USERNAME=root
 DB_PASSWORD=password
 ```
 
-####If you have docker
-
-- `make run`
-
-####else
-
-- `cd backend`
-- `composer install`
-- `php artisan migrate`
-- `php artisan db:seed`
+- `make init`
+- `cd backend -> npm install && npm run dev`
 
 http://localhost:8080
+
+###Test
+
+- `make test`
